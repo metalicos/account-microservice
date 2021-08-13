@@ -1,0 +1,45 @@
+server:
+  port: 5050
+
+spring:
+  application:
+    name: account-microservice
+  profiles:
+    active: dev
+
+  datasource:
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/account-micro
+
+#  flyway:
+#    user: root
+#    password: root
+#    encoding: utf-8
+#    url: jdbc:mysql://localhost:3306/account-micro
+#---
+#spring:
+#  config:
+#    activate:
+#      on-profile: dev
+#
+#security:
+#  jwt-secret: secret
+#  jwt-expiration-time-ms: 86400000 #24 hours
+#---
+#spring:
+#  config:
+#    activate:
+#      on-profile: stg
+#security:
+#  jwt-secret: secret
+#  jwt-expiration-time-ms: 86400000 #24 hours
+#---
+#spring:
+#  config:
+#    activate:
+#      on-profile: prod
+#security:
+#  jwt-secret: as-secret-as-we-can
+#  jwt-expiration-time-ms: 86400000 #24 hours
