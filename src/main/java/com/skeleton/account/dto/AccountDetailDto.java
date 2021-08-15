@@ -18,6 +18,6 @@ public class AccountDetailDto {
     private String patronymic;
     private LocalDate birthDate;
     private Gender gender;
-    private String photo;
+    private Byte[] photo;
     private Account account;
 }

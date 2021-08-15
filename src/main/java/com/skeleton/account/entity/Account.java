@@ -38,7 +38,7 @@ public class Account extends BasicEntity {
     private Boolean isEnabled = true;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "account_role",
+    @JoinTable(name = "account_has_role",
             joinColumns = {@JoinColumn(name = "account_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Set<Role> roles;
