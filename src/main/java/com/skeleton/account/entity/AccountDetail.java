@@ -11,6 +11,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
@@ -36,8 +37,9 @@ public class AccountDetail extends BasicEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Lob
     @Column(name = "photo")
-    private String photo;
+    private Byte[] photo;
 
     @OneToOne(optional = false, cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", referencedColumnName = "id",
