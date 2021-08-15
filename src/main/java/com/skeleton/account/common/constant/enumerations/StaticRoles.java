@@ -1,4 +1,4 @@
-package com.skeleton.account.common.constant;
+package com.skeleton.account.common.constant.enumerations;
 
 import com.skeleton.account.entity.Role;
 

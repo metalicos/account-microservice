@@ -1,6 +1,6 @@
 package com.skeleton.account.common.util;
 
-import com.skeleton.account.common.constant.StaticRoles;
+import com.skeleton.account.common.constant.enumerations.StaticRoles;
 import com.skeleton.account.entity.Account;
 import com.skeleton.account.entity.Role;
 import lombok.experimental.UtilityClass;
@@ -8,15 +8,15 @@ import lombok.experimental.UtilityClass;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.skeleton.account.common.constant.StaticRoles.ADMIN;
-import static com.skeleton.account.common.constant.StaticRoles.MANAGER;
-import static com.skeleton.account.common.constant.StaticRoles.SUPER_ADMIN;
-import static com.skeleton.account.common.constant.StaticRoles.USER;
+import static com.skeleton.account.common.constant.enumerations.StaticRoles.ADMIN;
+import static com.skeleton.account.common.constant.enumerations.StaticRoles.MANAGER;
+import static com.skeleton.account.common.constant.enumerations.StaticRoles.SUPER_ADMIN;
+import static com.skeleton.account.common.constant.enumerations.StaticRoles.USER;
 
 @UtilityClass
 public final class SetupAccountUtil {
 
-    public static Account setupAccount(Account account, StaticRoles role) {
+    public static void setupAccount(Account account, StaticRoles role) {
         Set<Role> roles = new HashSet<>();
         if (SUPER_ADMIN.equals(role)) {
             roles.add(SUPER_ADMIN.getRole());
@@ -31,20 +31,19 @@ public final class SetupAccountUtil {
             roles.add(USER.getRole());
         }
         account.setRoles(roles);
-        return makeFullyAvailable(account);
+        makeFullyAvailable(account);
     }
 
-    private static Account makeFullyAvailable(Account account) {
-        return setupAvailable(account, true, true, true, true);
+    private static void makeFullyAvailable(Account account) {
+        setupAvailable(account, true, true, true, true);
     }
 
-    public static Account setupAvailable(Account account,
+    public static void setupAvailable(Account account,
                                          boolean enabled, boolean credentialsNonExpired,
                                          boolean nonExpired, boolean nonLocked) {
-        account.setIsEnabled(true);
-        account.setIsCredentialsNonExpired(true);
-        account.setIsNonExpired(true);
-        account.setIsNonLocked(true);
-        return account;
+        account.setIsEnabled(enabled);
+        account.setIsCredentialsNonExpired(credentialsNonExpired);
+        account.setIsNonExpired(nonExpired);
+        account.setIsNonLocked(nonLocked);
     }
 }

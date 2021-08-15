@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Data
 @Builder
-public class AccountResponseDto {
+public class AccountDto {
     private Long id;
     private String username;
     private Boolean isNonExpired;

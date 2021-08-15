@@ -18,18 +18,25 @@ import java.util.Set;
 @Table(name = "account")
 @EqualsAndHashCode(callSuper = true)
 public class Account extends BasicEntity {
+
     @Column(name = "username", length = 200, nullable = false, unique = true)
     private String username;
+
     @Column(name = "password", length = 200, nullable = false)
     private String password;
+
     @Column(name = "is_non_expired")
     private Boolean isNonExpired = true;
+
     @Column(name = "is_non_locked")
     private Boolean isNonLocked = true;
+
     @Column(name = "is_credentials_non_expired")
     private Boolean isCredentialsNonExpired = true;
+
     @Column(name = "is_enabled")
     private Boolean isEnabled = true;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "account_role",
             joinColumns = {@JoinColumn(name = "account_id", referencedColumnName = "id")},

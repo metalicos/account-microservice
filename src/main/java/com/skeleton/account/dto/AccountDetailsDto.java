@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 @Builder
-public class AccountsResponseDto {
-    private List<AccountResponseDto> accounts;
+public class AccountDetailsDto {
+    private List<AccountDetailDto> accountDetails;
 }
