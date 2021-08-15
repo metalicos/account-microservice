@@ -39,8 +39,8 @@ public final class SetupAccountUtil {
     }
 
     public static void setupAvailable(Account account,
-                                         boolean enabled, boolean credentialsNonExpired,
-                                         boolean nonExpired, boolean nonLocked) {
+                                      boolean enabled, boolean credentialsNonExpired,
+                                      boolean nonExpired, boolean nonLocked) {
         account.setIsEnabled(enabled);
         account.setIsCredentialsNonExpired(credentialsNonExpired);
         account.setIsNonExpired(nonExpired);

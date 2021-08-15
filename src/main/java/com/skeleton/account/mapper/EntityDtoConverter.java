@@ -55,7 +55,7 @@ public class EntityDtoConverter {
                 .collect(toList());
     }
 
-    public  <Entity, Dto> Set<Entity> toEntitySet(Set<Dto> dtoSet) {
+    public <Entity, Dto> Set<Entity> toEntitySet(Set<Dto> dtoSet) {
         if (dtoSet == null || dtoSet.isEmpty()) {
             return Collections.emptySet();
         }
