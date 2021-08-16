@@ -11,7 +11,7 @@ import static com.skeleton.account.common.exception.messages.UsernameNotFoundMes
 
 @Service
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class MyUserDetailsService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
 
