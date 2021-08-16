@@ -29,6 +29,7 @@ spring:
 security:
   jwt-secret: secret
   jwt-expiration-time-ms: 86400000 #24 hours
+  time-update: 600000
 ---
 spring:
   config:
@@ -37,6 +38,7 @@ spring:
 security:
   jwt-secret: secret
   jwt-expiration-time-ms: 86400000 #24 hours
+  time-update: 600000
 ---
 spring:
   config:
@@ -45,3 +47,4 @@ spring:
 security:
   jwt-secret: as-secret-as-we-can
   jwt-expiration-time-ms: 86400000 #24 hours
+  time-update: 600000

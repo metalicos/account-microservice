@@ -2,6 +2,20 @@
 -- CREATE SCHEMA IF NOT EXISTS `account-micro` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE `account-micro`;
 
+-- DROP TABLE IF EXISTS `account-micro`.`invalid_tokens`;
+CREATE TABLE IF NOT EXISTS `account-micro`.`invalid_tokens`
+(
+    `id`                BIGINT        NOT NULL AUTO_INCREMENT,
+    `account_id`        BIGINT        NOT NULL,
+    `invalid_token`     VARCHAR(1000) NOT NULL,
+    `expiration_date`   DATE          NULL DEFAULT NULL,
+    `created_timestamp` DATETIME(6)   NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4
+    COLLATE = utf8mb4_0900_ai_ci;
+
 -- DROP TABLE IF EXISTS `account-micro`.`account`;
 CREATE TABLE IF NOT EXISTS `account-micro`.`account`
 (
@@ -93,7 +107,8 @@ COMMIT;
 START TRANSACTION;
 INSERT INTO `account-micro`.`account` (`id`, `created_timestamp`, `is_credentials_non_expired`, `is_enabled`,
                                        `is_non_expired`, `is_non_locked`, `password`, `username`)
-VALUES (1, '2021-08-15 16:52:00', 1, 1, 1, 1, 'password', 'ostap.ja@gmail.com');
+VALUES (1, '2021-08-15 16:52:00', 1, 1, 1, 1, '$2a$12$/OMN12e9NG0CsYSYSd7a6.FY0pjPYCh9oL7TGlWcOd4gYKcT70.PK',
+        'ostap.ja@gmail.com');
 COMMIT;
 
 -- ADD ROLES TO ACCOUNT
