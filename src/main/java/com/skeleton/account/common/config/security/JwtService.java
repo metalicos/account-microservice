@@ -18,9 +18,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import static java.util.Objects.nonNull;
+
 @Slf4j
 @Service
-public class JwtUtils {
+public class JwtService {
 
     public static final String BEARER = "Bearer ";
 
@@ -29,9 +31,6 @@ public class JwtUtils {
 
     @Value("${security.jwt-expiration-time-ms}")
     private Long jwtExpirationTimeInMs;
-
-    @Value("${security.time-update}")
-    private int tokenTimeUpdate;
 
     public String getUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -51,7 +50,7 @@ public class JwtUtils {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(parseToken(token)).getBody();
     }
 
     public String generateToken(String username) {
@@ -85,7 +84,7 @@ public class JwtUtils {
     }
 
     public boolean isValidToken(String jwtToken) {
-        if (!StringUtils.isEmpty(jwtToken) && jwtToken.startsWith(BEARER)) {
+        if (nonNull(jwtToken) && !jwtToken.isBlank() && jwtToken.startsWith(BEARER)) {
             String token = parseToken(jwtToken);
             if (validateJwtToken(token)) {
                 return isTokenExpired(token);
@@ -110,5 +109,9 @@ public class JwtUtils {
             log.error("JWT claims string is empty: {}", e.getMessage());
         }
         return false;
+    }
+
+    public Long getJwtExpirationTimeInMs() {
+        return jwtExpirationTimeInMs;
     }
 }

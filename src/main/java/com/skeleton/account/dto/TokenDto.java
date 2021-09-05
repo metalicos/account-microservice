@@ -8,4 +8,5 @@ import lombok.Data;
 public class TokenDto {
     private String token;
     private String tokenType;
+    private Long tokenLiveTimeInSeconds;
 }

@@ -54,35 +54,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf()
                 .disable()
+
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(
                         (request, response, exception) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
                                 "Error: Unauthorized"))
+
                 .and()
                 .exceptionHandling()
                 .accessDeniedHandler(
                         (request, response, e) -> response.sendError(HttpServletResponse.SC_FORBIDDEN,
                                 "Error: Forbidden"))
+
                 .and()
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(crossOriginFilter(), CorsFilter.class)
+
                 .authorizeRequests()
-                .antMatchers("/authorisation/**","/registration/**")
+                .antMatchers("/authorisation/**", "/registration/**")
                 .permitAll()
+
                 .anyRequest()
                 .authenticated()
+
                 .and()
                 .logout()
                 .logoutUrl("/user-service/logout")
-                .logoutSuccessHandler((
-                        (request, response, authentication) -> {
-                            response.setStatus(HttpServletResponse.SC_OK);
-                            authentication.setAuthenticated(false);
-                        }))
+
+                .logoutSuccessHandler(((request, response, authentication) -> {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    authentication.setAuthenticated(false);
+                }))
                 .permitAll();
     }
-
 }

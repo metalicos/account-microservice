@@ -19,10 +19,6 @@ public class ChangePasswordDto {
 
     @Pattern(regexp = PASSWORD,
             message = PASSWORD_FAIL_MESSAGE)
-    private String oldPassword;
-
-    @Pattern(regexp = PASSWORD,
-            message = PASSWORD_FAIL_MESSAGE)
     private String newPassword;
 
     @Pattern(regexp = PASSWORD,

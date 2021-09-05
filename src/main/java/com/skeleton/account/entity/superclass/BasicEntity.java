@@ -1,4 +1,4 @@
-package com.skeleton.account.entity;
+package com.skeleton.account.entity.superclass;
 
 import lombok.Getter;
 import lombok.Setter;
