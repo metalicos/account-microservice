@@ -1,8 +1,8 @@
 package com.skeleton.account.common.config.security.filter;
 
-import com.skeleton.account.common.config.security.JwtUtils;
+import com.skeleton.account.common.config.security.JwtService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,22 +16,20 @@ import java.io.IOException;
 import static java.util.Objects.nonNull;
 
 @Slf4j
+@AllArgsConstructor
 public abstract class AuthenticationFilter extends OncePerRequestFilter {
 
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
-    @Autowired
-    protected JwtUtils jwtUtils;
-    @Autowired
+    protected JwtService jwtService;
     protected UserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
-            String token = parseJwt(request);
-            if (nonNull(token) && jwtUtils.validateJwtToken(token)) {
+            var token = parseJwt(request);
+            if (nonNull(token) && jwtService.validateJwtToken(token)) {
                 authenticate(request, token);
             }
         } catch (Exception e) {
@@ -43,8 +41,8 @@ public abstract class AuthenticationFilter extends OncePerRequestFilter {
     public abstract void authenticate(HttpServletRequest request, String token);
 
     private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader(AUTHORIZATION);
-        return StringUtils.hasText(headerAuth) &&
-                headerAuth.startsWith(BEARER) ? headerAuth.substring(BEARER.length()) : null;
+        var headerAuth = request.getHeader(AUTHORIZATION);
+        return StringUtils.hasText(headerAuth) && headerAuth.startsWith(BEARER) ?
+                headerAuth.substring(BEARER.length()) : null;
     }
 }
