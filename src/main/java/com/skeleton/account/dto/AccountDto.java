@@ -4,7 +4,6 @@ import com.skeleton.account.entity.Role;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.util.Set;
 
 @Data

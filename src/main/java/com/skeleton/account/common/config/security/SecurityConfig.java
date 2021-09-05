@@ -86,9 +86,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/user-service/logout")
 
                 .logoutSuccessHandler(((request, response, authentication) -> {
-                            response.setStatus(HttpServletResponse.SC_OK);
-                            authentication.setAuthenticated(false);
-                        }))
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    authentication.setAuthenticated(false);
+                }))
                 .permitAll();
     }
 }

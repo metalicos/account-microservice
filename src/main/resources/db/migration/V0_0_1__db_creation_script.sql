@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `account-micro`.`account`
     `last_name`                  VARCHAR(25)  NOT NULL,
     `patronymic`                 VARCHAR(25)  NOT NULL,
     `username`                   VARCHAR(100) NOT NULL UNIQUE,
-    `password`                   VARCHAR(300)  NOT NULL,
+    `password`                   VARCHAR(300) NOT NULL,
     `photo`                      LONGBLOB     NULL DEFAULT NULL,
     `is_credentials_non_expired` BIT(1)       NULL DEFAULT NULL,
     `is_enabled`                 BIT(1)       NULL DEFAULT NULL,
@@ -54,13 +54,13 @@ CREATE TABLE IF NOT EXISTS `account-micro`.`account_detail`
 
 CREATE TABLE IF NOT EXISTS `account-micro`.`account_role`
 (
-    `id`                BIGINT       NOT NULL AUTO_INCREMENT,
-    `role`              VARCHAR(200) NOT NULL UNIQUE,
+    `id`                 BIGINT       NOT NULL AUTO_INCREMENT,
+    `role`               VARCHAR(200) NOT NULL UNIQUE,
     `read_permissions`   VARCHAR(1000),
     `write_permissions`  VARCHAR(1000),
     `update_permissions` VARCHAR(1000),
     `delete_permissions` VARCHAR(1000),
-    `created_timestamp` DATETIME(6)  NULL DEFAULT NULL,
+    `created_timestamp`  DATETIME(6)  NULL DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `UK_role` (`role` ASC) VISIBLE
 )

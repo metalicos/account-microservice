@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Arrays;
 import java.util.Set;
 
-import static com.skeleton.account.common.util.ImageConverterUtils.*;
+import static com.skeleton.account.common.util.ImageConverterUtils.convertImageFromFileToBlob;
 
 @UtilityClass
 public final class AccountUtils {
@@ -17,7 +17,7 @@ public final class AccountUtils {
     private static final String CREATE_USER_PERMITTED = "OWNER" + SPLIT_CHAR + "ADMIN" + SPLIT_CHAR + "SUPER_ADMIN";
     private static final String DEFAULT_USER_PHOTO_PATH = "src/main/resources/static/user.png";
 
-    public static boolean permittedToCreateNewUser(Account creatorAccount){
+    public static boolean permittedToCreateNewUser(Account creatorAccount) {
         return creatorAccount.getRoles().stream()
                 .anyMatch(role -> Arrays.stream(CREATE_USER_PERMITTED.split(SPLIT_CHAR))
                         .anyMatch(p -> p.equals(role.getRole())));
@@ -25,7 +25,7 @@ public final class AccountUtils {
 
     public static void setupAccount(PasswordEncoder passwordEncoder, Account account, Set<Role> roles) {
         account.setRoles(roles);
-        setupAccount(passwordEncoder,account);
+        setupAccount(passwordEncoder, account);
     }
 
     public static void setupAccount(PasswordEncoder passwordEncoder, Account account) {

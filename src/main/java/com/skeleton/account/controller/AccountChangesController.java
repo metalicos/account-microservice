@@ -3,7 +3,6 @@ package com.skeleton.account.controller;
 import com.skeleton.account.common.exception.AccountUpdatingException;
 import com.skeleton.account.dto.ChangeFullNameDto;
 import com.skeleton.account.dto.ChangePasswordDto;
-import com.skeleton.account.dto.TokenDto;
 import com.skeleton.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
