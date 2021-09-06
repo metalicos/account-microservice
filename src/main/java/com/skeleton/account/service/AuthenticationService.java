@@ -1,11 +1,12 @@
 package com.skeleton.account.service;
 
-import com.skeleton.account.common.config.security.JwtService;
-import com.skeleton.account.common.exception.AccountReadException;
+import com.skeleton.account.common.exception.AlreadyExistException;
 import com.skeleton.account.common.exception.AuthenticationException;
-import com.skeleton.account.dto.LoginDto;
-import com.skeleton.account.dto.LogoutDto;
-import com.skeleton.account.dto.TokenDto;
+import com.skeleton.account.common.exception.NotFoundException;
+import com.skeleton.account.config.security.JwtService;
+import com.skeleton.account.dto.account.LoginDto;
+import com.skeleton.account.dto.account.LogoutDto;
+import com.skeleton.account.dto.token.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,7 +33,6 @@ public class AuthenticationService {
         } catch (BadCredentialsException ex) {
             throw new AuthenticationException("Bad Username or Password. Exception=" + ex.getMessage());
         }
-
         return TokenDto.builder()
                 .tokenType("Bearer ")
                 .token(jwtService.generateToken(loginDto.getEmail()))
@@ -40,7 +40,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public TokenDto logout(LogoutDto logoutDto) throws AccountReadException {
+    public TokenDto logout(LogoutDto logoutDto) throws NotFoundException, AlreadyExistException {
         var token = logoutDto.getToken();
         var account = accountService.getAccount(jwtService.getUsername(token));
         invalidTokenService.invalidate(account, token);
