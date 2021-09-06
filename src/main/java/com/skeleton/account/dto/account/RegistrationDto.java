@@ -1,13 +1,11 @@
 package com.skeleton.account.dto.account;
 
 import com.skeleton.account.entity.Role;
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.Set;
 
 @Data
-@Builder
 public class RegistrationDto {
     private String creatorToken;
     private String username;
