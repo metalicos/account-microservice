@@ -9,10 +9,16 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.Objects;
+import java.util.Set;
 
 @Table
 @Getter
@@ -27,17 +33,11 @@ public class Role extends BasicEntity {
     @Column(name = "role", length = 200, nullable = false, unique = true)
     private String role;
 
-    @Column(name = "read_permissions", length = 1000)
-    private String readPermissions;
-
-    @Column(name = "write_permissions", length = 1000)
-    private String writePermissions;
-
-    @Column(name = "update_permissions", length = 1000)
-    private String updatePermissions;
-
-    @Column(name = "delete_permissions", length = 1000)
-    private String deletePermissions;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "role_has_permission",
+            joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "permission_id", referencedColumnName = "id")})
+    private Set<Permission> permissions;
 
     @Override
     public boolean equals(Object o) {

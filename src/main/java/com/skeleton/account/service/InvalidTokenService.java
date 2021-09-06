@@ -1,7 +1,8 @@
 package com.skeleton.account.service;
 
-import com.skeleton.account.common.config.security.JwtService;
-import com.skeleton.account.dto.AccountDto;
+import com.skeleton.account.common.exception.AlreadyExistException;
+import com.skeleton.account.config.security.JwtService;
+import com.skeleton.account.dto.account.AccountDto;
 import com.skeleton.account.entity.Account;
 import com.skeleton.account.entity.InvalidToken;
 import com.skeleton.account.mapper.AccountMapper;
@@ -11,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -21,26 +20,21 @@ public class InvalidTokenService {
     private final ModelMapper modelMapper;
     private final JwtService jwtService;
 
-    public void invalidate(AccountDto accountDto, String token) {
+    public void invalidate(AccountDto accountDto, String token) throws AlreadyExistException {
         if (jwtService.isValidToken(token)) {
-            saveInvalidToken(accountDto, token);
+            saveInvalidTokenIfNotExist(accountDto, token);
         }
     }
 
-    private void saveInvalidToken(AccountDto accountDto, String token) {
-        var accountMapper = new AccountMapper<AccountDto>(modelMapper);
-        var account = accountMapper.toEntity(accountDto);
-        if (!invalidTokenRepository.existsByAccountAndInvalidToken(account, token)) {
-            var invalidToken = setupInvalidToken(account, token, jwtService.getExpirationDate(token));
-            invalidTokenRepository.save(invalidToken);
+    private void saveInvalidTokenIfNotExist(AccountDto accountDto, String token) throws AlreadyExistException {
+        var account = new AccountMapper<AccountDto>(modelMapper).toEntity(accountDto, Account.class);
+        if (invalidTokenRepository.existsByAccountAndInvalidToken(account, token)) {
+            throw new AlreadyExistException("You have already logged out");
         }
-    }
-
-    private InvalidToken setupInvalidToken(Account account, String token, Date expirationDate) {
-        return InvalidToken.builder()
+        invalidTokenRepository.save(InvalidToken.builder()
                 .account(account)
                 .invalidToken(token)
-                .expirationDate(expirationDate)
-                .build();
+                .expirationDate(jwtService.getExpirationDate(token))
+                .build());
     }
 }

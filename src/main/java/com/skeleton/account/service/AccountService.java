@@ -1,14 +1,15 @@
 package com.skeleton.account.service;
 
-import com.skeleton.account.common.config.security.JwtService;
-import com.skeleton.account.common.exception.AccountCreationException;
-import com.skeleton.account.common.exception.AccountReadException;
-import com.skeleton.account.common.exception.AccountUpdatingException;
-import com.skeleton.account.dto.AccountDto;
-import com.skeleton.account.dto.AccountsDto;
-import com.skeleton.account.dto.AddAccountDto;
-import com.skeleton.account.dto.ChangeFullNameDto;
-import com.skeleton.account.dto.ChangePasswordDto;
+import com.skeleton.account.common.exception.AccessDeniedException;
+import com.skeleton.account.common.exception.AlreadyExistException;
+import com.skeleton.account.common.exception.NotFoundException;
+import com.skeleton.account.config.security.JwtService;
+import com.skeleton.account.dto.account.AccountDto;
+import com.skeleton.account.dto.account.AccountsDto;
+import com.skeleton.account.dto.account.ChangeFullNameDto;
+import com.skeleton.account.dto.account.ChangePasswordDto;
+import com.skeleton.account.dto.account.ChangeUsernameDto;
+import com.skeleton.account.dto.account.RegistrationDto;
 import com.skeleton.account.entity.Account;
 import com.skeleton.account.mapper.AccountMapper;
 import com.skeleton.account.repository.AccountRepository;
@@ -39,33 +40,30 @@ public class AccountService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public AccountsDto getAllAccounts() throws AccountReadException {
+    public AccountsDto getAllAccounts() throws NotFoundException {
         var accounts = Optional.of(accountRepository.findAll())
-                .orElseThrow(() -> new AccountReadException("None accounts was found."));
-        var mapper = new AccountMapper<AccountDto>(modelMapper);
-        return AccountsDto.builder().accounts(mapper.toDtoList(accounts, AccountDto.class)).build();
+                .orElseThrow(() -> new NotFoundException("None accounts was found."));
+        return AccountsDto.builder()
+                .accounts(new AccountMapper<AccountDto>(modelMapper).toDtoList(accounts, AccountDto.class)).build();
     }
 
-    public AccountsDto getAllAccounts(int page, int size) throws AccountReadException {
+    public AccountsDto getAllAccounts(int page, int size) throws NotFoundException {
         var accounts = Optional.of(accountRepository.findAll(PageRequest.of(page, size)))
-                .orElseThrow(() -> new AccountReadException("None accounts was found."));
-        var mapper = new AccountMapper<AccountDto>(modelMapper);
+                .orElseThrow(() -> new NotFoundException("None accounts was found."));
         return AccountsDto.builder()
                 .page(page)
                 .elementsOnThePage(size)
                 .foundElements(accounts.getNumberOfElements())
                 .totallyElements(accounts.getTotalElements())
                 .totallyPages(accounts.getTotalPages())
-                .accounts(mapper.toDtoList(accounts.getContent(), AccountDto.class))
+                .accounts(new AccountMapper<AccountDto>(modelMapper).toDtoList(accounts.getContent(), AccountDto.class))
                 .build();
     }
 
-    public AccountsDto getAllAccounts(int page, int size, String direction, String sortBy)
-            throws AccountReadException {
+    public AccountsDto getAllAccounts(int page, int size, String direction, String sortBy) throws NotFoundException {
         var sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         var accounts = Optional.of(accountRepository.findAll(PageRequest.of(page, size, sort)))
-                .orElseThrow(() -> new AccountReadException("None accounts was found."));
-        var mapper = new AccountMapper<AccountDto>(modelMapper);
+                .orElseThrow(() -> new NotFoundException("None accounts was found."));
         return AccountsDto.builder()
                 .page(page)
                 .elementsOnThePage(size)
@@ -74,26 +72,25 @@ public class AccountService {
                 .totallyPages(accounts.getTotalPages())
                 .sortedBy(sortBy)
                 .sortDirection(direction)
-                .accounts(mapper.toDtoList(accounts.getContent(), AccountDto.class))
+                .accounts(new AccountMapper<AccountDto>(modelMapper).toDtoList(accounts.getContent(), AccountDto.class))
                 .build();
     }
 
-    public AccountDto getAccount(String username) throws AccountReadException {
-        var account = accountRepository.findByUsername(username)
-                .orElseThrow(() -> new AccountReadException("Account not found."));
-        var mapper = new AccountMapper<AccountDto>(modelMapper);
-        return mapper.toDto(account, AccountDto.class);
+    public AccountDto getAccount(String username) throws NotFoundException {
+        var account = accountRepository.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("Account not found."));
+        return new AccountMapper<AccountDto>(modelMapper).toDto(account, AccountDto.class);
     }
 
-    public AccountDto addAccount(AddAccountDto addAccountDto) throws AccountCreationException {
-        if (!accountRepository.existsByUsername(addAccountDto.getUsername())) {
-            var mapper = new AccountMapper<AddAccountDto>(modelMapper);
-            var account = mapper.toEntity(addAccountDto);
-            var token = addAccountDto.getCreatorToken();
+    public AccountDto createAccount(RegistrationDto registrationDto)
+            throws NotFoundException, AlreadyExistException, AccessDeniedException {
+        if (!accountRepository.existsByUsername(registrationDto.getUsername())) {
+            var account = new AccountMapper<RegistrationDto>(modelMapper).toEntity(registrationDto, Account.class);
+            var token = registrationDto.getCreatorToken();
             if (nonNull(token)) {
                 var creatorUserUsername = jwtService.getUsername(token);
                 var creatorAccount = accountRepository.findByUsername(creatorUserUsername).orElseThrow(
-                        () -> new AccountCreationException("Account creator is not found."));
+                        () -> new NotFoundException("Account creator is not found."));
                 var permitted = permittedToCreateNewUser(creatorAccount);
                 return createNewUserIfCreatorPermitted(permitted, account);
             }
@@ -101,43 +98,23 @@ public class AccountService {
             setupAccount(passwordEncoder, account, defaultRole);
             return createNewUser(account);
         }
-        throw new AccountCreationException("Account with username=" + addAccountDto.getUsername() + " exists.");
+        throw new AlreadyExistException("Account with username=" + registrationDto.getUsername() + " exists.");
     }
 
     private AccountDto createNewUserIfCreatorPermitted(boolean permitted, Account account)
-            throws AccountCreationException {
+            throws AccessDeniedException {
         if (permitted) {
             setupAccount(passwordEncoder, account);
             return createNewUser(account);
         }
-        throw new AccountCreationException("Account creator is not permitted to create new User");
+        throw new AccessDeniedException("Account creator is not permitted to create new User");
     }
 
     private AccountDto createNewUser(Account account) {
         var savedAccount = accountRepository.save(account);
-        var accountMapper = new AccountMapper<AccountDto>(modelMapper);
-        var accountDto = accountMapper.toDto(savedAccount, AccountDto.class);
+        var accountDto = new AccountMapper<AccountDto>(modelMapper).toDto(savedAccount, AccountDto.class);
         log.info("Account={} is successfully added", accountDto);
         return accountDto;
-    }
-
-    public void updateAccountPassword(String username, String password) throws AccountUpdatingException {
-        var account = accountRepository.findByUsername(username)
-                .orElseThrow(() -> new AccountUpdatingException("Account not found."));
-        account.setPassword(passwordEncoder.encode(password));
-        accountRepository.save(account);
-        log.info("Account password is changed");
-    }
-
-    public void updateAccountUsername(String username, String newUsername) throws AccountUpdatingException {
-        if (accountRepository.existsByUsername(newUsername)) {
-            throw new AccountUpdatingException("Account with this username exists, choose another one.");
-        }
-        var account = accountRepository.findByUsername(username)
-                .orElseThrow(() -> new AccountUpdatingException("Account not found."));
-        account.setUsername(newUsername);
-        accountRepository.save(account);
-        log.info("Account username is changed from '{}' to '{}'", username, newUsername);
     }
 
     public void deleteAccount(String username) {
@@ -150,21 +127,33 @@ public class AccountService {
         log.info("All Accounts are deleted");
     }
 
-    public void changePassword(ChangePasswordDto dto) throws AccountUpdatingException {
+    public void changeAccountPassword(ChangePasswordDto dto) throws NotFoundException {
         var account = accountRepository.findByUsername(dto.getUsername()).orElseThrow(
-                () -> new AccountUpdatingException("Account not found"));
+                () -> new NotFoundException("Account not found"));
         account.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         accountRepository.save(account);
         log.info("Password is updated");
     }
 
-    public void changeFullName(ChangeFullNameDto dto) throws AccountUpdatingException {
+    public void changeAccountFullName(ChangeFullNameDto dto) throws NotFoundException {
         var account = accountRepository.findByUsername(dto.getUsername()).orElseThrow(
-                () -> new AccountUpdatingException("Account not found"));
+                () -> new NotFoundException("Account not found"));
         account.setFirstName(dto.getFirstName());
         account.setLastName(dto.getLastName());
         account.setPatronymic(dto.getPatronymic());
         accountRepository.save(account);
         log.info("Full name is updated");
+    }
+
+    public void changeAccountUsername(ChangeUsernameDto dto)
+            throws AlreadyExistException, NotFoundException {
+        if (accountRepository.existsByUsername(dto.getNewUsername())) {
+            throw new AlreadyExistException("Account with this username exists, choose another one.");
+        }
+        var account = accountRepository.findByUsername(dto.getOldUsername()).orElseThrow(
+                () -> new NotFoundException("Account not found."));
+        account.setUsername(dto.getNewUsername());
+        accountRepository.save(account);
+        log.info("Account username is changed from '{}' to '{}'", dto.getOldUsername(), dto.getNewUsername());
     }
 }
