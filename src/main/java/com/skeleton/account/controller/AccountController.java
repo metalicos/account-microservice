@@ -11,6 +11,7 @@ import com.skeleton.account.dto.account.ChangePasswordDto;
 import com.skeleton.account.dto.account.ChangeUsernameDto;
 import com.skeleton.account.dto.account.LoginDto;
 import com.skeleton.account.dto.account.LogoutDto;
+import com.skeleton.account.dto.account.ReadAccountDto;
 import com.skeleton.account.dto.account.RegistrationDto;
 import com.skeleton.account.dto.token.TokenDto;
 import com.skeleton.account.service.AccountService;
@@ -48,9 +49,9 @@ public class AccountController {
         return ResponseEntity.ok(OK);
     }
 
-    @GetMapping("/{username}")
-    public ResponseEntity<AccountDto> readAccount(@PathVariable("username") String name) throws NotFoundException {
-        return ResponseEntity.ok(accountService.getAccount(name));
+    @PostMapping
+    public ResponseEntity<AccountDto> readAccount(@RequestBody ReadAccountDto dto) throws NotFoundException {
+        return ResponseEntity.ok(accountService.getAccount(dto.getUsername()));
     }
 
     @PostMapping("/registration")
