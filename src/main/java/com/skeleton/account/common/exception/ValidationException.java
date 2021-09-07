@@ -1,6 +1,6 @@
 package com.skeleton.account.common.exception;
 
-public class ValidationException extends Exception{
+public class ValidationException extends Exception {
     public ValidationException() {
     }
 

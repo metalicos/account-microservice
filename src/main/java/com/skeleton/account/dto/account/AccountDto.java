@@ -2,7 +2,6 @@ package com.skeleton.account.dto.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.skeleton.account.entity.Role;
 import lombok.Data;
 

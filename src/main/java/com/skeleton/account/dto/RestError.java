@@ -6,13 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Data
 @Builder
-@JsonPropertyOrder({"timestamp","error","title","detail"})
+@JsonPropertyOrder({"timestamp", "error", "title", "detail"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RestError {
     @JsonProperty("timestamp")
