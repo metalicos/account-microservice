@@ -20,6 +20,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
+    public static final String BEARER = "Bearer ";
     private final AccountService accountService;
     private final AuthenticationManager authenticationManager;
     private final InvalidTokenService invalidTokenService;
@@ -33,9 +34,9 @@ public class AuthenticationService {
         } catch (BadCredentialsException ex) {
             throw new AuthenticationException("Bad Username or Password. Exception=" + ex.getMessage());
         }
+        var token = jwtService.generateToken(loginDto.getEmail());
         return TokenDto.builder()
-                .tokenType("Bearer ")
-                .token(jwtService.generateToken(loginDto.getEmail()))
+                .authToken(BEARER + token)
                 .tokenLiveTimeInSeconds(MILLISECONDS.toSeconds(jwtService.getJwtExpirationTimeInMs()))
                 .build();
     }

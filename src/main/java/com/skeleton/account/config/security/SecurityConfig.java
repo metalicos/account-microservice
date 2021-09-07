@@ -80,16 +80,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
 
                 .anyRequest()
-                .authenticated()
-
-                .and()
-                .logout()
-                .logoutUrl("/accounts/authentication/logout")
-
-                .logoutSuccessHandler(((request, response, authentication) -> {
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    authentication.setAuthenticated(false);
-                }))
-                .permitAll();
+                .authenticated();
     }
 }

@@ -29,7 +29,7 @@ import java.util.Objects;
 @Table(name = "invalid_tokens")
 public class InvalidToken extends BasicEntity {
 
-    @OneToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 

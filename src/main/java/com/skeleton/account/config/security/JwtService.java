@@ -60,7 +60,7 @@ public class JwtService {
                 .setSubject(username)
                 .setIssuedAt(generateCurrentDate())
                 .setExpiration(generateExpirationDate())
-                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
 
@@ -79,7 +79,6 @@ public class JwtService {
     public TokenDto getEmptyToken() {
         return TokenDto.builder()
                 .token("")
-                .tokenType(BEARER)
                 .build();
     }
 
@@ -87,7 +86,7 @@ public class JwtService {
         if (nonNull(jwtToken) && !jwtToken.isBlank() && jwtToken.startsWith(BEARER)) {
             String token = parseToken(jwtToken);
             if (validateJwtToken(token)) {
-                return isTokenExpired(token);
+                return !isTokenExpired(token);
             }
         }
         return false;

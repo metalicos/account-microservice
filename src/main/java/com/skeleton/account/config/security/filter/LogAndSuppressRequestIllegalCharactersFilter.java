@@ -41,7 +41,6 @@ public class LogAndSuppressRequestIllegalCharactersFilter extends GenericFilterB
             sendBadRequest(httpServletResponse, MALICIOUS_STRING);
             return;
         }
-
         try {
             chain.doFilter(request, response);
         } catch (RequestRejectedException ex) {

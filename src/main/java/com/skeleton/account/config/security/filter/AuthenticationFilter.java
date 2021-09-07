@@ -1,6 +1,7 @@
 package com.skeleton.account.config.security.filter;
 
 import com.skeleton.account.config.security.JwtService;
+import com.skeleton.account.repository.InvalidTokenRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,14 +22,19 @@ public abstract class AuthenticationFilter extends OncePerRequestFilter {
     public static final String BEARER = "Bearer ";
     protected JwtService jwtService;
     protected UserDetailsService userDetailsService;
+    protected InvalidTokenRepository invalidTokenRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) {
         try {
             var token = parseJwt(request);
-            if (nonNull(token) && jwtService.validateJwtToken(token)) {
-                authenticate(request, token);
+            if (nonNull(token)) {
+                if (jwtService.validateJwtToken(token) &&
+                        !invalidTokenRepository.existsByAccountUsernameAndInvalidToken(
+                                jwtService.getUsername(token), token)) {
+                    authenticate(request, jwtService.getUsername(token));
+                }
             }
             filterChain.doFilter(request, response);
         } catch (Exception e) {
@@ -36,7 +42,7 @@ public abstract class AuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    public abstract void authenticate(HttpServletRequest request, String token);
+    public abstract void authenticate(HttpServletRequest request, String username);
 
     private String parseJwt(HttpServletRequest request) {
         var headerAuth = request.getHeader(AUTHORIZATION);
