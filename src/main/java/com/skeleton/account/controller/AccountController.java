@@ -18,6 +18,7 @@ import com.skeleton.account.service.AccountService;
 import com.skeleton.account.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,17 +40,20 @@ public class AccountController {
     private final AuthenticationService authenticationService;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('r_all','r_accounts')")
     public ResponseEntity<AccountsDto> readAllAccounts() throws NotFoundException {
         return ResponseEntity.ok(accountService.getAllAccounts());
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAnyAuthority('d_all','d_accounts')")
     public ResponseEntity<String> deleteAllAccounts() {
         accountService.deleteAllAccounts();
         return ResponseEntity.ok(OK);
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('r_all','r_accounts','r_self')")
     public ResponseEntity<AccountDto> readAccount(@RequestBody ReadAccountDto dto) throws NotFoundException {
         return ResponseEntity.ok(accountService.getAccount(dto.getUsername()));
     }
@@ -61,18 +65,21 @@ public class AccountController {
     }
 
     @DeleteMapping("/{name}")
+    @PreAuthorize("hasAnyAuthority('d_all','d_accounts','d_self')")
     public ResponseEntity<String> deleteAccount(@PathVariable("name") String name) {
         accountService.deleteAccount(name);
         return ResponseEntity.ok(OK);
     }
 
     @GetMapping("/page/{page}/size/{size}")
+    @PreAuthorize("hasAnyAuthority('r_all','r_accounts')")
     public ResponseEntity<AccountsDto> readAccounts(@PathVariable("page") Integer page,
                                                     @PathVariable("size") Integer size) throws NotFoundException {
         return ResponseEntity.ok(accountService.getAllAccounts(page, size));
     }
 
     @GetMapping("/page/{page}/size/{size}/sort-by/{sort-by}")
+    @PreAuthorize("hasAnyAuthority('r_all','r_accounts')")
     public ResponseEntity<AccountsDto> readAccounts(@PathVariable("page") Integer page,
                                                     @PathVariable("size") Integer size,
                                                     @PathVariable("sort-by") String sortBy) throws NotFoundException {
@@ -80,6 +87,7 @@ public class AccountController {
     }
 
     @GetMapping("/page/{page}/size/{size}/sort-by/{sort-by}/direction/{direction}")
+    @PreAuthorize("hasAnyAuthority('r_all','r_accounts')")
     public ResponseEntity<AccountsDto> readAccounts(@PathVariable("page") Integer page,
                                                     @PathVariable("size") Integer size,
                                                     @PathVariable("sort-by") String sortBy,
@@ -96,6 +104,7 @@ public class AccountController {
     }
 
     @PostMapping("/change/fullname")
+    @PreAuthorize("hasAnyAuthority('u_all','u_accounts','u_self')")
     public ResponseEntity<String> changeFullName(@RequestBody @Valid ChangeFullNameDto changeFullNameDto)
             throws NotFoundException {
         accountService.changeAccountFullName(changeFullNameDto);
@@ -103,6 +112,7 @@ public class AccountController {
     }
 
     @PostMapping("/change/username")
+    @PreAuthorize("hasAnyAuthority('u_all','u_accounts','u_self')")
     public ResponseEntity<String> changeUsername(@RequestBody @Valid ChangeUsernameDto changeUsernameDto)
             throws NotFoundException, AlreadyExistException {
         accountService.changeAccountUsername(changeUsernameDto);

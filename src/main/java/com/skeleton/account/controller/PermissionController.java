@@ -8,6 +8,7 @@ import com.skeleton.account.dto.permission.PermissionsDto;
 import com.skeleton.account.service.PermissionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,40 +27,47 @@ public class PermissionController {
     private final PermissionService permissionService;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('r_all','u_permissions')")
     public ResponseEntity<PermissionsDto> readAllPermissions() throws NotFoundException {
         return ResponseEntity.ok(permissionService.getAllPermissions());
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAnyAuthority('d_all','d_permissions')")
     public ResponseEntity<String> deleteAllPermissions() {
         permissionService.deleteAllPermission();
         return ResponseEntity.ok(OK);
     }
 
     @GetMapping("/{name}")
+    @PreAuthorize("hasAnyAuthority('r_all','r_permissions')")
     public ResponseEntity<PermissionDto> readPermission(@PathVariable("name") String name) throws NotFoundException {
         return ResponseEntity.ok(permissionService.getPermission(name));
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('w_all','w_permissions')")
     public ResponseEntity<PermissionDto> createPermission(@RequestBody CreatePermissionDto dto)
             throws NotFoundException, AlreadyExistException {
         return ResponseEntity.ok(permissionService.createPermission(dto.getName(), dto.getValue()));
     }
 
     @DeleteMapping("/{name}")
+    @PreAuthorize("hasAnyAuthority('d_all','d_permissions')")
     public ResponseEntity<String> deletePermission(@PathVariable("name") String name) {
         permissionService.deletePermission(name);
         return ResponseEntity.ok(OK);
     }
 
     @GetMapping("/page/{page}/size/{size}")
+    @PreAuthorize("hasAnyAuthority('r_all','r_permissions')")
     public ResponseEntity<PermissionsDto> readPermissions(@PathVariable("page") Integer page,
                                                           @PathVariable("size") Integer size) throws NotFoundException {
         return ResponseEntity.ok(permissionService.getAllPermissions(page, size));
     }
 
     @GetMapping("/page/{page}/size/{size}/sort-by/{sort-by}")
+    @PreAuthorize("hasAnyAuthority('r_all','r_permissions')")
     public ResponseEntity<PermissionsDto> readPermissions(@PathVariable("page") Integer page,
                                                           @PathVariable("size") Integer size,
                                                           @PathVariable("sort-by") String sortBy) {
@@ -67,6 +75,7 @@ public class PermissionController {
     }
 
     @GetMapping("/page/{page}/size/{size}/sort-by/{sort-by}/direction/{direction}")
+    @PreAuthorize("hasAnyAuthority('r_all','r_permissions')")
     public ResponseEntity<PermissionsDto> readPermissions(@PathVariable("page") Integer page,
                                                           @PathVariable("size") Integer size,
                                                           @PathVariable("sort-by") String sortBy,
