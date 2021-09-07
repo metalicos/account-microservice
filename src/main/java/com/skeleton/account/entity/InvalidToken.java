@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,7 +28,7 @@ import java.util.Objects;
 @Table(name = "invalid_tokens")
 public class InvalidToken extends BasicEntity {
 
-    @OneToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 

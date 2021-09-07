@@ -23,13 +23,12 @@ import javax.servlet.http.HttpServletResponse;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final MyUserDetailsService myUserDetailsService;
+    private final CyberdoneUserDetailsService cyberdoneUserDetailsService;
     private final AuthenticationFilter authFilter;
-
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder(14);
+        return new BCryptPasswordEncoder(13);
     }
 
     @Bean
@@ -45,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(myUserDetailsService);
+        auth.userDetailsService(cyberdoneUserDetailsService);
     }
 
     @Override
@@ -81,16 +80,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
 
                 .anyRequest()
-                .authenticated()
-
-                .and()
-                .logout()
-                .logoutUrl("/accounts/authentication/logout")
-
-                .logoutSuccessHandler(((request, response, authentication) -> {
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    authentication.setAuthenticated(false);
-                }))
-                .permitAll();
+                .authenticated();
     }
 }

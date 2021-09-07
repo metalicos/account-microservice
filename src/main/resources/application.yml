@@ -28,8 +28,8 @@ spring:
       on-profile: dev
 
 security:
-  jwt-secret: secret
-  jwt-expiration-time-ms: 86400000 #24 hours
+  jwt-secret: d2980f58-3d82-4144-b802-406f4b47930b-5784cca4-0b50-425e-ac6c-bd651e0c788d
+  jwt-expiration-time-ms: 86400000 #24 hours 86400000
 
 ---
 spring:
@@ -37,7 +37,7 @@ spring:
     activate:
       on-profile: stg
 security:
-  jwt-secret: secret
+  jwt-secret: d2980f58-3d82-4144-b802-406f4b47930b-5784cca4-0b50-425e-ac6c-bd651e0c788d
   jwt-expiration-time-ms: 86400000 #24 hours
 
 ---
@@ -46,5 +46,5 @@ spring:
     activate:
       on-profile: prod
 security:
-  jwt-secret: as-secret-as-we-can
+  jwt-secret: d2980f58-3d82-4144-b802-406f4b47930b-5784cca4-0b50-425e-ac6c-bd651e0c788d
   jwt-expiration-time-ms: 86400000 #24 hours

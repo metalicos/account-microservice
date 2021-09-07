@@ -13,6 +13,8 @@ public class Regex {
             "^[A-Za-z0-9-_=]{1,}\\.[A-Za-z0-9-_=]{1,}\\.[A-Za-z0-9-_.+=]{1,}$";
     public static final String TOKEN_TYPE =
             "^Bearer $";
+    public static final String TOKEN_WITH_TYPE =
+            "^Bearer [A-Za-z0-9-_=]{1,}\\.[A-Za-z0-9-_=]{1,}\\.[A-Za-z0-9-_.+=]{1,}$";
     public static final String FIRST_NAME =
             "(?i)(^[a-z])((?![ .,'-]$)[a-z .,'-]){0,24}$";
     public static final String LAST_NAME =

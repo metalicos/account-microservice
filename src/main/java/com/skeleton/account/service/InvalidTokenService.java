@@ -10,6 +10,7 @@ import com.skeleton.account.repository.InvalidTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -36,5 +37,6 @@ public class InvalidTokenService {
                 .invalidToken(token)
                 .expirationDate(jwtService.getExpirationDate(token))
                 .build());
+        SecurityContextHolder.clearContext();
     }
 }
