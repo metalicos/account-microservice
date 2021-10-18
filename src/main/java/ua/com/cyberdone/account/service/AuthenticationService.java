@@ -1,0 +1,56 @@
+package ua.com.cyberdone.account.service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import ua.com.cyberdone.account.common.exception.AlreadyExistException;
+import ua.com.cyberdone.account.common.exception.AuthenticationException;
+import ua.com.cyberdone.account.common.exception.NotFoundException;
+import ua.com.cyberdone.account.config.security.JwtService;
+import ua.com.cyberdone.account.dto.account.LoginDto;
+import ua.com.cyberdone.account.dto.account.LogoutDto;
+import ua.com.cyberdone.account.dto.token.TokenDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class AuthenticationService {
+
+    public static final String BEARER = "Bearer ";
+    private final AccountService accountService;
+    private final AuthenticationManager authenticationManager;
+    private final InvalidTokenService invalidTokenService;
+    private final JwtService jwtService;
+
+    public TokenDto login(LoginDto loginDto) throws AuthenticationException {
+        try {
+            var authenticationToken =
+                    new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+            var authentication = authenticationManager.authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            var account = accountService.getAccount(loginDto.getEmail());
+            var token = jwtService.generateToken(account);
+            return TokenDto.builder()
+                    .authToken(BEARER + token)
+                    .tokenLiveTimeInSeconds(MILLISECONDS.toSeconds(jwtService.getJwtExpirationTimeInMs()))
+                    .build();
+        } catch (BadCredentialsException | NotFoundException | JsonProcessingException ex) {
+            throw new AuthenticationException("Bad Username or Password. Exception=" + ex.getMessage());
+        }
+    }
+
+    public TokenDto logout(LogoutDto logoutDto) throws NotFoundException, AlreadyExistException {
+        var token = logoutDto.getToken();
+        var account = accountService.getAccount(jwtService.getUsername(token));
+        invalidTokenService.invalidate(account, token);
+        return jwtService.getEmptyToken();
+    }
+}
