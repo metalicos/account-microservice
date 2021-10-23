@@ -1,6 +1,6 @@
-package ua.com.cyberdone.account.config.security.filter;
+package ua.com.cyberdone.account.security.filter;
 
-import ua.com.cyberdone.account.config.security.JwtService;
+import ua.com.cyberdone.account.security.JwtService;
 import ua.com.cyberdone.account.repository.InvalidTokenRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,9 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public class TokenAuthenticationFilter extends AuthenticationFilter {
 
-    public TokenAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService,
-                                     InvalidTokenRepository invalidTokenRepository) {
-        super(jwtService, userDetailsService, invalidTokenRepository);
+    public TokenAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+        super(jwtService, userDetailsService);
     }
 
     @Override

@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `account-micro`.`invalid_tokens`
 (
     `id`                BIGINT        NOT NULL AUTO_INCREMENT,
     `account_id`        BIGINT        NOT NULL,
-    `invalid_token`     VARCHAR(1000) NOT NULL,
+    `invalid_token`     VARCHAR(3000) NOT NULL,
     `expiration_date`   DATE          NOT NULL,
     `created_timestamp` DATETIME(6)   NULL DEFAULT NULL,
     PRIMARY KEY (`id`)

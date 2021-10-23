@@ -28,7 +28,7 @@ public class PermissionController {
     private final PermissionService permissionService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('r_all','u_permissions')")
+    @PreAuthorize("hasAnyAuthority('r_all','r_permissions')")
     public ResponseEntity<Object> readPermissions(@RequestParam(value = "name", required = false) String name)
             throws NotFoundException {
         if (nonNull(name)) {

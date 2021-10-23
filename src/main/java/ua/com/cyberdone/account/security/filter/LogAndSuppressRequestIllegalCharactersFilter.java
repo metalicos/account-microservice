@@ -1,4 +1,4 @@
-package ua.com.cyberdone.account.config.security.filter;
+package ua.com.cyberdone.account.security.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;

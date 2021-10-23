@@ -1,19 +1,5 @@
 package ua.com.cyberdone.account.service;
 
-import ua.com.cyberdone.account.common.exception.AccessDeniedException;
-import ua.com.cyberdone.account.common.exception.AlreadyExistException;
-import ua.com.cyberdone.account.common.exception.NotFoundException;
-import ua.com.cyberdone.account.config.security.JwtService;
-import ua.com.cyberdone.account.dto.account.AccountDto;
-import ua.com.cyberdone.account.dto.account.AccountsDto;
-import ua.com.cyberdone.account.dto.account.ChangeFullNameDto;
-import ua.com.cyberdone.account.dto.account.ChangePasswordDto;
-import ua.com.cyberdone.account.dto.account.ChangeUsernameDto;
-import ua.com.cyberdone.account.dto.account.RegistrationDto;
-import ua.com.cyberdone.account.entity.Account;
-import ua.com.cyberdone.account.mapper.AccountMapper;
-import ua.com.cyberdone.account.repository.AccountRepository;
-import ua.com.cyberdone.account.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -21,12 +7,26 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ua.com.cyberdone.account.common.exception.AccessDeniedException;
+import ua.com.cyberdone.account.common.exception.AlreadyExistException;
+import ua.com.cyberdone.account.common.exception.NotFoundException;
 import ua.com.cyberdone.account.common.util.AccountUtils;
+import ua.com.cyberdone.account.dto.account.AccountDto;
+import ua.com.cyberdone.account.dto.account.AccountsDto;
+import ua.com.cyberdone.account.dto.account.ChangeEmailDto;
+import ua.com.cyberdone.account.dto.account.ChangeFullNameDto;
+import ua.com.cyberdone.account.dto.account.ChangePasswordDto;
+import ua.com.cyberdone.account.dto.account.RegistrationDto;
+import ua.com.cyberdone.account.entity.Account;
+import ua.com.cyberdone.account.mapper.AccountMapper;
+import ua.com.cyberdone.account.repository.AccountRepository;
+import ua.com.cyberdone.account.repository.RoleRepository;
+import ua.com.cyberdone.account.security.JwtService;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.Set;
 
-import static ua.com.cyberdone.account.common.util.AccountUtils.setupAccount;
 import static java.util.Objects.nonNull;
 
 @Slf4j
@@ -68,6 +68,7 @@ public class AccountService {
         return new AccountMapper<AccountDto>(modelMapper).toDto(account, AccountDto.class);
     }
 
+    @Transactional
     public AccountDto createAccount(RegistrationDto registrationDto)
             throws NotFoundException, AlreadyExistException, AccessDeniedException {
         if (!accountRepository.existsByUsername(registrationDto.getUsername())) {
@@ -103,16 +104,19 @@ public class AccountService {
         return accountDto;
     }
 
+    @Transactional
     public void deleteAccount(String username) {
         accountRepository.deleteByUsername(username);
         log.info("Account with 'username'='{}' is deleted", username);
     }
 
+    @Transactional
     public void deleteAllAccounts() {
         accountRepository.deleteAll();
         log.info("All Accounts are deleted");
     }
 
+    @Transactional
     public void changeAccountPassword(ChangePasswordDto dto) throws NotFoundException {
         var account = accountRepository.findByUsername(dto.getUsername()).orElseThrow(
                 () -> new NotFoundException("Account not found"));
@@ -121,6 +125,7 @@ public class AccountService {
         log.info("Password is updated");
     }
 
+    @Transactional
     public void changeAccountFullName(ChangeFullNameDto dto) throws NotFoundException {
         var account = accountRepository.findByUsername(dto.getUsername()).orElseThrow(
                 () -> new NotFoundException("Account not found"));
@@ -131,15 +136,16 @@ public class AccountService {
         log.info("Full name is updated");
     }
 
-    public void changeAccountUsername(ChangeUsernameDto dto)
+    @Transactional
+    public void changeAccountUsername(ChangeEmailDto dto)
             throws AlreadyExistException, NotFoundException {
-        if (accountRepository.existsByUsername(dto.getNewUsername())) {
+        if (accountRepository.existsByUsername(dto.getOldEmail())) {
             throw new AlreadyExistException("Account with this username exists, choose another one.");
         }
-        var account = accountRepository.findByUsername(dto.getOldUsername()).orElseThrow(
+        var account = accountRepository.findByUsername(dto.getOldEmail()).orElseThrow(
                 () -> new NotFoundException("Account not found."));
-        account.setUsername(dto.getNewUsername());
+        account.setUsername(dto.getNewEmail());
         accountRepository.save(account);
-        log.info("Account username is changed from '{}' to '{}'", dto.getOldUsername(), dto.getNewUsername());
+        log.info("Account username is changed from '{}' to '{}'", dto.getOldEmail(), dto.getNewEmail());
     }
 }

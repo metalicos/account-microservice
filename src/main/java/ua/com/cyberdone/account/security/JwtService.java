@@ -1,10 +1,7 @@
-package ua.com.cyberdone.account.config.security;
+package ua.com.cyberdone.account.security;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ua.com.cyberdone.account.dto.account.AccountDto;
-import ua.com.cyberdone.account.dto.token.TokenDto;
-import ua.com.cyberdone.account.entity.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -17,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import ua.com.cyberdone.account.dto.account.AccountDto;
+import ua.com.cyberdone.account.dto.token.TokenDto;
+import ua.com.cyberdone.account.entity.Role;
 
 import java.util.Date;
 import java.util.function.Function;
@@ -42,6 +42,10 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public long getUserId(String token) {
+        return Long.parseLong(extractClaim(token, Claims::getId));
+    }
+
     public Date getExpirationDate(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
@@ -60,11 +64,11 @@ public class JwtService {
     }
 
     public String generateToken(AccountDto accountDto) throws JsonProcessingException {
-        Claims claims = Jwts.claims().setSubject(accountDto.getUsername());
-        claims.put("roles", mapper.writeValueAsString(accountDto.getRoles().toArray(new Role[0])) );
+        log.error("Think it has no email:{}", accountDto);
+        Claims claims = Jwts.claims().setSubject(accountDto.getUsername()).setId(accountDto.getId() + "");
+        claims.put("roles", mapper.writeValueAsString(accountDto.getRoles().toArray(new Role[0])));
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(accountDto.getUsername())
                 .setIssuedAt(generateCurrentDate())
                 .setExpiration(generateExpirationDate())
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -89,21 +93,18 @@ public class JwtService {
 
     public TokenDto getEmptyToken() {
         return TokenDto.builder()
-                .token("")
+                .authToken("")
                 .build();
     }
 
     public boolean isValidToken(String jwtToken) {
-        if (nonNull(jwtToken) && !jwtToken.isBlank() && jwtToken.startsWith(BEARER)) {
-            String token = parseToken(jwtToken);
-            if (validateJwtToken(token)) {
-                return !isTokenExpired(token);
-            }
+        if (nonNull(jwtToken) && !jwtToken.isBlank()) {
+            return validJwt(parseToken(jwtToken));
         }
         return false;
     }
 
-    public boolean validateJwtToken(String authToken) {
+    public boolean validJwt(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
@@ -121,7 +122,7 @@ public class JwtService {
         return false;
     }
 
-    public Long getJwtExpirationTimeInMs() {
+    public Long expTimeInMs() {
         return jwtExpirationTimeInMs;
     }
 }

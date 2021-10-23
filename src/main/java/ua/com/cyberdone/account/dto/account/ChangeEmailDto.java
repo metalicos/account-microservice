@@ -8,13 +8,13 @@ import javax.validation.constraints.Pattern;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ChangeUsernameDto {
+public class ChangeEmailDto {
 
     @Pattern(regexp = Regex.EMAIL,
             message = Regex.EMAIL_FAIL_MESSAGE)
-    private String oldUsername;
+    private String oldEmail;
 
     @Pattern(regexp = Regex.EMAIL,
             message = Regex.EMAIL_FAIL_MESSAGE)
-    private String newUsername;
+    private String newEmail;
 }

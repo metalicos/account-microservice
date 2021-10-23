@@ -1,7 +1,7 @@
 package ua.com.cyberdone.account.service;
 
 import ua.com.cyberdone.account.common.exception.AlreadyExistException;
-import ua.com.cyberdone.account.config.security.JwtService;
+import ua.com.cyberdone.account.security.JwtService;
 import ua.com.cyberdone.account.dto.account.AccountDto;
 import ua.com.cyberdone.account.entity.Account;
 import ua.com.cyberdone.account.entity.InvalidToken;

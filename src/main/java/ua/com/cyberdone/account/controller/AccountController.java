@@ -8,7 +8,7 @@ import ua.com.cyberdone.account.dto.account.AccountDto;
 import ua.com.cyberdone.account.dto.account.AccountsDto;
 import ua.com.cyberdone.account.dto.account.ChangeFullNameDto;
 import ua.com.cyberdone.account.dto.account.ChangePasswordDto;
-import ua.com.cyberdone.account.dto.account.ChangeUsernameDto;
+import ua.com.cyberdone.account.dto.account.ChangeEmailDto;
 import ua.com.cyberdone.account.dto.account.LoginDto;
 import ua.com.cyberdone.account.dto.account.LogoutDto;
 import ua.com.cyberdone.account.dto.account.RegistrationDto;
@@ -43,6 +43,7 @@ public class AccountController {
     private final AuthenticationService authenticationService;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('r_all','r_accounts','r_self')")
     public ResponseEntity<Object> readAccounts(@RequestParam(value = "username", required = false) String username)
             throws NotFoundException {
         if (nonNull(username)) {
@@ -52,6 +53,7 @@ public class AccountController {
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAnyAuthority('d_all','d_accounts','d_self')")
     public ResponseEntity<String> deleteAccounts(@RequestParam(value = "username", required = false) String username) {
         if (nonNull(username)) {
             accountService.deleteAccount(username);
@@ -68,6 +70,7 @@ public class AccountController {
     }
 
     @GetMapping("/page/{page}/size/{size}/sort-by/{sort-by}/direction/{direction}")
+    @PreAuthorize("hasAnyAuthority('r_all','r_accounts','r_self')")
     public ResponseEntity<AccountsDto> readAccounts(@PathVariable("page") Integer page,
                                                     @PathVariable("size") Integer size,
                                                     @PathVariable("sort-by") String sortBy,
@@ -93,9 +96,9 @@ public class AccountController {
 
     @PutMapping("/change/username")
     @PreAuthorize("hasAnyAuthority('u_all','u_accounts','u_self')")
-    public ResponseEntity<String> changeUsername(@RequestBody @Valid ChangeUsernameDto changeUsernameDto)
+    public ResponseEntity<String> changeUsername(@RequestBody @Valid ChangeEmailDto changeEmailDto)
             throws NotFoundException, AlreadyExistException {
-        accountService.changeAccountUsername(changeUsernameDto);
+        accountService.changeAccountUsername(changeEmailDto);
         return ResponseEntity.ok(ControllerConstantUtils.OK);
     }
 

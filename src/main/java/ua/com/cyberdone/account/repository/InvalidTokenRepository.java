@@ -16,8 +16,8 @@ public interface InvalidTokenRepository extends JpaRepository<InvalidToken, Long
 
     @Query("select count(token) > 0 from InvalidToken token " +
             "where token.account.username = :username and token.invalidToken = :token")
-    boolean existsByAccountUsernameAndInvalidToken(@Param("username") String username,
-                                                   @Param("token") String invalidToken);
+    boolean isInvalid(@Param("username") String username,
+                      @Param("token") String invalidToken);
 
     boolean existsByAccountAndInvalidToken(Account account, String invalidToken);
 }

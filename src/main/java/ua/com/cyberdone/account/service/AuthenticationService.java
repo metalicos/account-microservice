@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import ua.com.cyberdone.account.common.exception.AlreadyExistException;
 import ua.com.cyberdone.account.common.exception.AuthenticationException;
 import ua.com.cyberdone.account.common.exception.NotFoundException;
-import ua.com.cyberdone.account.config.security.JwtService;
+import ua.com.cyberdone.account.security.JwtService;
 import ua.com.cyberdone.account.dto.account.LoginDto;
 import ua.com.cyberdone.account.dto.account.LogoutDto;
 import ua.com.cyberdone.account.dto.token.TokenDto;
@@ -32,15 +32,15 @@ public class AuthenticationService {
     public TokenDto login(LoginDto loginDto) throws AuthenticationException {
         try {
             var authenticationToken =
-                    new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+                    new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
             var authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            var account = accountService.getAccount(loginDto.getEmail());
+            var account = accountService.getAccount(loginDto.getUsername());
             var token = jwtService.generateToken(account);
             return TokenDto.builder()
                     .authToken(BEARER + token)
-                    .tokenLiveTimeInSeconds(MILLISECONDS.toSeconds(jwtService.getJwtExpirationTimeInMs()))
+                    .tokenLiveTimeInSeconds(MILLISECONDS.toSeconds(jwtService.expTimeInMs()))
                     .build();
         } catch (BadCredentialsException | NotFoundException | JsonProcessingException ex) {
             throw new AuthenticationException("Bad Username or Password. Exception=" + ex.getMessage());

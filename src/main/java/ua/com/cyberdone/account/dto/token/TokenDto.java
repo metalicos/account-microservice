@@ -9,7 +9,5 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TokenDto {
     private String authToken;
-    private String tokenType;
-    private String token;
     private Long tokenLiveTimeInSeconds;
 }

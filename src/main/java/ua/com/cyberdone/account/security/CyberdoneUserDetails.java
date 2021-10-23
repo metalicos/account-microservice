@@ -1,4 +1,4 @@
-package ua.com.cyberdone.account.config.security;
+package ua.com.cyberdone.account.security;
 
 import ua.com.cyberdone.account.entity.Account;
 import ua.com.cyberdone.account.entity.Permission;

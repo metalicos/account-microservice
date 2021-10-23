@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 public class LoginDto {
     @Pattern(regexp = Regex.EMAIL,
             message = Regex.EMAIL_FAIL_MESSAGE)
-    private String email;
+    private String username;
 
     @Pattern(regexp = Regex.PASSWORD,
             message = Regex.PASSWORD_FAIL_MESSAGE)
