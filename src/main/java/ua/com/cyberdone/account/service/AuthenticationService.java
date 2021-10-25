@@ -1,13 +1,6 @@
 package ua.com.cyberdone.account.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import ua.com.cyberdone.account.common.exception.AlreadyExistException;
-import ua.com.cyberdone.account.common.exception.AuthenticationException;
-import ua.com.cyberdone.account.common.exception.NotFoundException;
-import ua.com.cyberdone.account.security.JwtService;
-import ua.com.cyberdone.account.dto.account.LoginDto;
-import ua.com.cyberdone.account.dto.account.LogoutDto;
-import ua.com.cyberdone.account.dto.token.TokenDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +8,13 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ua.com.cyberdone.account.common.exception.AlreadyExistException;
+import ua.com.cyberdone.account.common.exception.AuthenticationException;
+import ua.com.cyberdone.account.common.exception.NotFoundException;
+import ua.com.cyberdone.account.dto.account.LoginDto;
+import ua.com.cyberdone.account.dto.account.LogoutDto;
+import ua.com.cyberdone.account.dto.token.TokenDto;
+import ua.com.cyberdone.account.security.JwtService;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 

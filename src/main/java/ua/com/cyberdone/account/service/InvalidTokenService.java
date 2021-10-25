@@ -1,17 +1,17 @@
 package ua.com.cyberdone.account.service;
 
-import ua.com.cyberdone.account.common.exception.AlreadyExistException;
-import ua.com.cyberdone.account.security.JwtService;
-import ua.com.cyberdone.account.dto.account.AccountDto;
-import ua.com.cyberdone.account.entity.Account;
-import ua.com.cyberdone.account.entity.InvalidToken;
-import ua.com.cyberdone.account.mapper.AccountMapper;
-import ua.com.cyberdone.account.repository.InvalidTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ua.com.cyberdone.account.common.exception.AlreadyExistException;
+import ua.com.cyberdone.account.dto.account.AccountDto;
+import ua.com.cyberdone.account.entity.Account;
+import ua.com.cyberdone.account.entity.InvalidToken;
+import ua.com.cyberdone.account.mapper.AccountMapper;
+import ua.com.cyberdone.account.repository.InvalidTokenRepository;
+import ua.com.cyberdone.account.security.JwtService;
 
 @Slf4j
 @Service

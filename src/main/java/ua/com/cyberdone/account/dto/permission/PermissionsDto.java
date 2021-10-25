@@ -1,9 +1,9 @@
 package ua.com.cyberdone.account.dto.permission;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import ua.com.cyberdone.account.entity.Permission;
 import lombok.Builder;
 import lombok.Data;
+import ua.com.cyberdone.account.entity.Permission;
 
 import java.util.Set;
 

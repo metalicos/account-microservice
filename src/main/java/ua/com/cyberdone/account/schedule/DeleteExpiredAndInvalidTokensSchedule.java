@@ -1,10 +1,10 @@
 package ua.com.cyberdone.account.schedule;
 
-import ua.com.cyberdone.account.repository.InvalidTokenRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import ua.com.cyberdone.account.repository.InvalidTokenRepository;
 
 import javax.transaction.Transactional;
 import java.util.Date;

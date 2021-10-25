@@ -1,7 +1,7 @@
 package ua.com.cyberdone.account.repository;
 
-import ua.com.cyberdone.account.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
+import ua.com.cyberdone.account.entity.Role;
 
 import java.util.Optional;
 

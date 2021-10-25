@@ -1,11 +1,5 @@
 package ua.com.cyberdone.account.controller;
 
-import ua.com.cyberdone.account.common.exception.AlreadyExistException;
-import ua.com.cyberdone.account.common.exception.NotFoundException;
-import ua.com.cyberdone.account.dto.permission.CreatePermissionDto;
-import ua.com.cyberdone.account.dto.permission.PermissionDto;
-import ua.com.cyberdone.account.dto.permission.PermissionsDto;
-import ua.com.cyberdone.account.service.PermissionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.com.cyberdone.account.common.constant.ControllerConstantUtils;
+import ua.com.cyberdone.account.common.exception.AlreadyExistException;
+import ua.com.cyberdone.account.common.exception.NotFoundException;
+import ua.com.cyberdone.account.dto.permission.CreatePermissionDto;
+import ua.com.cyberdone.account.dto.permission.PermissionDto;
+import ua.com.cyberdone.account.dto.permission.PermissionsDto;
+import ua.com.cyberdone.account.service.PermissionService;
 
 import static java.util.Objects.nonNull;
 

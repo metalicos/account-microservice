@@ -1,20 +1,5 @@
 package ua.com.cyberdone.account.controller;
 
-import ua.com.cyberdone.account.common.exception.AccessDeniedException;
-import ua.com.cyberdone.account.common.exception.AlreadyExistException;
-import ua.com.cyberdone.account.common.exception.AuthenticationException;
-import ua.com.cyberdone.account.common.exception.NotFoundException;
-import ua.com.cyberdone.account.dto.account.AccountDto;
-import ua.com.cyberdone.account.dto.account.AccountsDto;
-import ua.com.cyberdone.account.dto.account.ChangeFullNameDto;
-import ua.com.cyberdone.account.dto.account.ChangePasswordDto;
-import ua.com.cyberdone.account.dto.account.ChangeEmailDto;
-import ua.com.cyberdone.account.dto.account.LoginDto;
-import ua.com.cyberdone.account.dto.account.LogoutDto;
-import ua.com.cyberdone.account.dto.account.RegistrationDto;
-import ua.com.cyberdone.account.dto.token.TokenDto;
-import ua.com.cyberdone.account.service.AccountService;
-import ua.com.cyberdone.account.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +14,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.com.cyberdone.account.common.constant.ControllerConstantUtils;
+import ua.com.cyberdone.account.common.exception.AccessDeniedException;
+import ua.com.cyberdone.account.common.exception.AlreadyExistException;
+import ua.com.cyberdone.account.common.exception.AuthenticationException;
+import ua.com.cyberdone.account.common.exception.NotFoundException;
+import ua.com.cyberdone.account.dto.account.AccountDto;
+import ua.com.cyberdone.account.dto.account.AccountsDto;
+import ua.com.cyberdone.account.dto.account.ChangeEmailDto;
+import ua.com.cyberdone.account.dto.account.ChangeFullNameDto;
+import ua.com.cyberdone.account.dto.account.ChangePasswordDto;
+import ua.com.cyberdone.account.dto.account.LoginDto;
+import ua.com.cyberdone.account.dto.account.LogoutDto;
+import ua.com.cyberdone.account.dto.account.RegistrationDto;
+import ua.com.cyberdone.account.dto.token.TokenDto;
+import ua.com.cyberdone.account.service.AccountService;
+import ua.com.cyberdone.account.service.AuthenticationService;
 
 import javax.validation.Valid;
 

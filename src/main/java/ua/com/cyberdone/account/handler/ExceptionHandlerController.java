@@ -1,12 +1,5 @@
 package ua.com.cyberdone.account.handler;
 
-import ua.com.cyberdone.account.common.exception.AccessDeniedException;
-import ua.com.cyberdone.account.common.exception.AlreadyExistException;
-import ua.com.cyberdone.account.common.exception.AuthenticationException;
-import ua.com.cyberdone.account.common.exception.InternalException;
-import ua.com.cyberdone.account.common.exception.NotFoundException;
-import ua.com.cyberdone.account.common.exception.ValidationException;
-import ua.com.cyberdone.account.dto.RestError;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -22,6 +15,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import ua.com.cyberdone.account.common.exception.AccessDeniedException;
+import ua.com.cyberdone.account.common.exception.AlreadyExistException;
+import ua.com.cyberdone.account.common.exception.AuthenticationException;
+import ua.com.cyberdone.account.common.exception.InternalException;
+import ua.com.cyberdone.account.common.exception.NotFoundException;
+import ua.com.cyberdone.account.common.exception.ValidationException;
+import ua.com.cyberdone.account.dto.RestError;
 
 import java.util.stream.Collectors;
 

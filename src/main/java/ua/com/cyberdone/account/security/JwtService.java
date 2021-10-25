@@ -29,14 +29,11 @@ import static java.util.Objects.nonNull;
 public class JwtService {
 
     public static final String BEARER = "Bearer ";
-
+    private final ObjectMapper mapper;
     @Value("${security.jwt-secret}")
     private String jwtSecret;
-
     @Value("${security.jwt-expiration-time-ms}")
     private Long jwtExpirationTimeInMs;
-
-    private final ObjectMapper mapper;
 
     public String getUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -64,7 +61,6 @@ public class JwtService {
     }
 
     public String generateToken(AccountDto accountDto) throws JsonProcessingException {
-        log.error("Think it has no email:{}", accountDto);
         Claims claims = Jwts.claims().setSubject(accountDto.getUsername()).setId(accountDto.getId() + "");
         claims.put("roles", mapper.writeValueAsString(accountDto.getRoles().toArray(new Role[0])));
         return Jwts.builder()

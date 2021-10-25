@@ -1,7 +1,5 @@
 package ua.com.cyberdone.account.entity;
 
-import ua.com.cyberdone.account.common.constant.enumerations.Gender;
-import ua.com.cyberdone.account.entity.superclass.BasicEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import ua.com.cyberdone.account.common.constant.enumerations.Gender;
+import ua.com.cyberdone.account.entity.superclass.BasicEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

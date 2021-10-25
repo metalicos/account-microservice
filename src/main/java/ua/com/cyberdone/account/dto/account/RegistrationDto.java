@@ -1,8 +1,8 @@
 package ua.com.cyberdone.account.dto.account;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import ua.com.cyberdone.account.entity.Role;
 import lombok.Data;
+import ua.com.cyberdone.account.entity.Role;
 
 import java.util.Set;
 

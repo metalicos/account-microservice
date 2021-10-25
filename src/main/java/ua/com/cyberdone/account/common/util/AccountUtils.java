@@ -1,9 +1,9 @@
 package ua.com.cyberdone.account.common.util;
 
-import ua.com.cyberdone.account.entity.Account;
-import ua.com.cyberdone.account.entity.Role;
 import lombok.experimental.UtilityClass;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ua.com.cyberdone.account.entity.Account;
+import ua.com.cyberdone.account.entity.Role;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -28,7 +28,7 @@ public final class AccountUtils {
 
     public static void setupAccount(PasswordEncoder passwordEncoder, Account account) {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        account.setPhoto(ImageConverterUtils.convertImageFromFileToBlob(DEFAULT_USER_PHOTO_PATH));
+        account.setPhoto(null);
         makeFullyAvailable(account);
     }
 

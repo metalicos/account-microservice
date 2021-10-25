@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ua.com.cyberdone.account.repository.InvalidTokenRepository;
 import ua.com.cyberdone.account.security.JwtService;
 
 import javax.servlet.FilterChain;

@@ -1,8 +1,8 @@
 package ua.com.cyberdone.account.repository;
 
-import ua.com.cyberdone.account.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import ua.com.cyberdone.account.entity.Account;
 
 import java.util.Optional;
 

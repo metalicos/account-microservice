@@ -1,11 +1,11 @@
 package ua.com.cyberdone.account.repository;
 
-import ua.com.cyberdone.account.entity.Account;
-import ua.com.cyberdone.account.entity.InvalidToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import ua.com.cyberdone.account.entity.Account;
+import ua.com.cyberdone.account.entity.InvalidToken;
 
 import java.util.Date;
 

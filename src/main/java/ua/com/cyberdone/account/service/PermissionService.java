@@ -1,5 +1,11 @@
 package ua.com.cyberdone.account.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 import ua.com.cyberdone.account.common.exception.AlreadyExistException;
 import ua.com.cyberdone.account.common.exception.NotFoundException;
 import ua.com.cyberdone.account.dto.permission.PermissionDto;
@@ -7,12 +13,6 @@ import ua.com.cyberdone.account.dto.permission.PermissionsDto;
 import ua.com.cyberdone.account.entity.Permission;
 import ua.com.cyberdone.account.mapper.PermissionMapper;
 import ua.com.cyberdone.account.repository.PermissionRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Optional;
