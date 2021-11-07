@@ -1,6 +1,6 @@
 package ua.com.cyberdone.account.security.filter;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
@@ -14,13 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public abstract class AuthenticationFilter extends OncePerRequestFilter {
 
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
-    protected JwtService jwtService;
-    protected UserDetailsService userDetailsService;
+    protected final JwtService jwtService;
+    protected final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {

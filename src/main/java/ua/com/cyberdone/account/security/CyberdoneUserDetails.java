@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CyberdoneUserDetails implements UserDetails {
+
     private final Account account;
 
     @Override
