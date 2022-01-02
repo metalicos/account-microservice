@@ -1,11 +1,12 @@
-USE `account-micro`;
+USE
+`account-micro`;
 #
 # ADD PERMISSIONS TO ROLES
 #
 START TRANSACTION;
 INSERT INTO `role_has_permission`(role_id, permission_id)
 VALUES
-# OWNER
+    # OWNER
 (1, 1),  -- Read All
 (1, 2),  -- Write All
 (1, 3),  -- Update All

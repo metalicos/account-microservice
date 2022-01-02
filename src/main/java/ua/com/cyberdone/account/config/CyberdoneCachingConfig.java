@@ -1,7 +1,6 @@
 package ua.com.cyberdone.account.config;
 
 
-import lombok.RequiredArgsConstructor;
 import net.sf.ehcache.config.CacheConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;

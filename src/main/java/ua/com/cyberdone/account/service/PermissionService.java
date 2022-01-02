@@ -64,7 +64,7 @@ public class PermissionService {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = PERMISSION_CACHE_NAME,  allEntries = true),
+            @CacheEvict(value = PERMISSION_CACHE_NAME, allEntries = true),
             @CacheEvict(value = PERMISSIONS_CACHE_NAME, allEntries = true)})
     public PermissionDto createPermission(String name, String value) throws AlreadyExistException {
         if (permissionRepository.existsByName(name)) {
@@ -76,7 +76,7 @@ public class PermissionService {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = PERMISSION_CACHE_NAME,  allEntries = true),
+            @CacheEvict(value = PERMISSION_CACHE_NAME, allEntries = true),
             @CacheEvict(value = PERMISSIONS_CACHE_NAME, allEntries = true)})
     public void deletePermission(String name) {
         permissionRepository.deleteByName(name);

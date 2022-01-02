@@ -1,4 +1,5 @@
-USE `account-micro`;
+USE
+`account-micro`;
 #
 # ADD ROLES TO ACCOUNTS
 #
