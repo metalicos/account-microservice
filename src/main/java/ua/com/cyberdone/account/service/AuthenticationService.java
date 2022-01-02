@@ -8,7 +8,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ua.com.cyberdone.account.common.exception.AlreadyExistException;
 import ua.com.cyberdone.account.common.exception.AuthenticationException;
 import ua.com.cyberdone.account.common.exception.NotFoundException;
 import ua.com.cyberdone.account.dto.account.LoginDto;
@@ -26,7 +25,6 @@ public class AuthenticationService {
     public static final String BEARER = "Bearer ";
     private final AccountService accountService;
     private final AuthenticationManager authenticationManager;
-    private final InvalidTokenService invalidTokenService;
     private final JwtService jwtService;
 
     public TokenDto login(LoginDto loginDto) throws AuthenticationException {
@@ -47,10 +45,8 @@ public class AuthenticationService {
         }
     }
 
-    public TokenDto logout(LogoutDto logoutDto) throws NotFoundException, AlreadyExistException {
-        var token = logoutDto.getToken();
-        var account = accountService.getAccount(jwtService.getUsername(token));
-        invalidTokenService.invalidate(account, token);
+    public TokenDto logout(LogoutDto logoutDto) {
+        log.info("Logout user={}", jwtService.getUsername(logoutDto.getToken()));
         return jwtService.getEmptyToken();
     }
 }

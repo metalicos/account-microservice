@@ -24,6 +24,10 @@ VALUES
 (2, 22), -- Write Self
 (2, 23), -- Update Self
 (2, 24), -- Delete Self
+(2, 37), -- Read Device Metadata
+(2, 38), -- Write Device Metadata
+(2, 39), -- Update Device Metadata
+(2, 40), -- Delete Device Metadata
 # ADMIN
 (3, 21), -- Read Self
 (3, 22), -- Write Self

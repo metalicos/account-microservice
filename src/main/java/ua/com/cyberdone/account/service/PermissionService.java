@@ -3,6 +3,9 @@ package ua.com.cyberdone.account.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,10 @@ import ua.com.cyberdone.account.repository.PermissionRepository;
 import java.util.HashSet;
 import java.util.Optional;
 
+import static ua.com.cyberdone.account.config.CyberdoneCachingConfig.PERMISSIONS_CACHE_NAME;
+import static ua.com.cyberdone.account.config.CyberdoneCachingConfig.PERMISSION_CACHE_NAME;
+
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,6 +31,7 @@ public class PermissionService {
     private final PermissionRepository permissionRepository;
     private final ModelMapper modelMapper;
 
+    @Cacheable(value = PERMISSIONS_CACHE_NAME)
     public PermissionsDto getAllPermissions() throws NotFoundException {
         var permissions = Optional.of(permissionRepository.findAll()).orElseThrow(
                 () -> new NotFoundException("Permission not found"));
@@ -47,6 +55,7 @@ public class PermissionService {
                 .build();
     }
 
+    @Cacheable(value = PERMISSION_CACHE_NAME, key = "#name")
     public PermissionDto getPermission(String name) throws NotFoundException {
         var permission = permissionRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundException("Permission not found"));
@@ -54,7 +63,10 @@ public class PermissionService {
         return new PermissionMapper<PermissionDto>(modelMapper).toDto(permission, PermissionDto.class);
     }
 
-    public PermissionDto createPermission(String name, String value) throws NotFoundException, AlreadyExistException {
+    @Caching(evict = {
+            @CacheEvict(value = PERMISSION_CACHE_NAME,  allEntries = true),
+            @CacheEvict(value = PERMISSIONS_CACHE_NAME, allEntries = true)})
+    public PermissionDto createPermission(String name, String value) throws AlreadyExistException {
         if (permissionRepository.existsByName(name)) {
             throw new AlreadyExistException("Permission already exists");
         }
@@ -63,11 +75,18 @@ public class PermissionService {
         return new PermissionMapper<PermissionDto>(modelMapper).toDto(saved, PermissionDto.class);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = PERMISSION_CACHE_NAME,  allEntries = true),
+            @CacheEvict(value = PERMISSIONS_CACHE_NAME, allEntries = true)})
     public void deletePermission(String name) {
         permissionRepository.deleteByName(name);
         log.info("Permission {} is deleted", name);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = PERMISSION_CACHE_NAME, allEntries = true),
+            @CacheEvict(value = PERMISSIONS_CACHE_NAME, allEntries = true)})
+    @CacheEvict(value = PERMISSIONS_CACHE_NAME, allEntries = true)
     public void deleteAllPermission() {
         permissionRepository.deleteAll();
         log.info("All Permissions are deleted");

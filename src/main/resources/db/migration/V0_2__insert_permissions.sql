@@ -47,5 +47,10 @@ VALUES (1, 'Read All', 'r_all', '2021-08-15 00:00:00'),
        (33, 'Read Account Role', 'r_account_role', '2021-08-15 00:00:00'),
        (34, 'Add Account Role', 'w_account_role', '2021-08-15 00:00:00'),
        (35, 'Update Account Role', 'u_account_role', '2021-08-15 00:00:00'),
-       (36, 'Delete Account Role', 'd_account_role', '2021-08-15 00:00:00');
+       (36, 'Delete Account Role', 'd_account_role', '2021-08-15 00:00:00'),
+
+       (37, 'Read Device Metadata', 'r_device_metadata', '2021-08-15 00:00:00'),
+       (38, 'Write Device Metadata', 'w_device_metadata', '2021-08-15 00:00:00'),
+       (39, 'Update Device Metadata', 'u_device_metadata', '2021-08-15 00:00:00'),
+       (40, 'Delete Device Metadata', 'd_device_metadata', '2021-08-15 00:00:00');
 COMMIT;

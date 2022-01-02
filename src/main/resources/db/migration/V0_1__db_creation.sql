@@ -1,18 +1,5 @@
 USE `account-micro`;
 
-CREATE TABLE IF NOT EXISTS `account-micro`.`invalid_tokens`
-(
-    `id`                BIGINT        NOT NULL AUTO_INCREMENT,
-    `account_id`        BIGINT        NOT NULL,
-    `invalid_token`     VARCHAR(3000) NOT NULL,
-    `expiration_date`   DATE          NOT NULL,
-    `created_timestamp` DATETIME(6)   NULL DEFAULT NULL,
-    PRIMARY KEY (`id`)
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8mb4
-    COLLATE = utf8mb4_0900_ai_ci;
-
 CREATE TABLE IF NOT EXISTS `account-micro`.`account`
 (
     `id`                         BIGINT       NOT NULL AUTO_INCREMENT,

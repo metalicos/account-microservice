@@ -3,6 +3,9 @@ package ua.com.cyberdone.account.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,12 +14,7 @@ import ua.com.cyberdone.account.common.exception.AccessDeniedException;
 import ua.com.cyberdone.account.common.exception.AlreadyExistException;
 import ua.com.cyberdone.account.common.exception.NotFoundException;
 import ua.com.cyberdone.account.common.util.AccountUtils;
-import ua.com.cyberdone.account.dto.account.AccountDto;
-import ua.com.cyberdone.account.dto.account.AccountsDto;
-import ua.com.cyberdone.account.dto.account.ChangeEmailDto;
-import ua.com.cyberdone.account.dto.account.ChangeFullNameDto;
-import ua.com.cyberdone.account.dto.account.ChangePasswordDto;
-import ua.com.cyberdone.account.dto.account.RegistrationDto;
+import ua.com.cyberdone.account.dto.account.*;
 import ua.com.cyberdone.account.entity.Account;
 import ua.com.cyberdone.account.mapper.AccountMapper;
 import ua.com.cyberdone.account.repository.AccountRepository;
@@ -28,6 +26,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.nonNull;
+import static ua.com.cyberdone.account.config.CyberdoneCachingConfig.ACCOUNTS_CACHE_NAME;
+import static ua.com.cyberdone.account.config.CyberdoneCachingConfig.ACCOUNT_CACHE_NAME;
 
 @Slf4j
 @Service
@@ -39,9 +39,11 @@ public class AccountService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
+    @Cacheable(value = ACCOUNTS_CACHE_NAME)
     public AccountsDto getAllAccounts() throws NotFoundException {
         var accounts = Optional.of(accountRepository.findAll())
                 .orElseThrow(() -> new NotFoundException("None accounts was found."));
+        log.info("Caching all accounts");
         return AccountsDto.builder()
                 .accounts(new AccountMapper<AccountDto>(modelMapper).toDtoList(accounts, AccountDto.class)).build();
     }
@@ -62,9 +64,11 @@ public class AccountService {
                 .build();
     }
 
+    @Cacheable(value = ACCOUNT_CACHE_NAME, key = "#username")
     public AccountDto getAccount(String username) throws NotFoundException {
         var account = accountRepository.findByUsername(username).orElseThrow(
                 () -> new NotFoundException("Account not found."));
+        log.info("Caching account={}", username);
         return new AccountMapper<AccountDto>(modelMapper).toDto(account, AccountDto.class);
     }
 
@@ -97,25 +101,42 @@ public class AccountService {
         throw new AccessDeniedException("Account creator is not permitted to create new User");
     }
 
-    private AccountDto createNewUser(Account account) {
+    @Caching(evict = {
+            @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
+            @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
+    public AccountDto createNewUser(Account account) {
         var savedAccount = accountRepository.save(account);
         var accountDto = new AccountMapper<AccountDto>(modelMapper).toDto(savedAccount, AccountDto.class);
         log.info("Account={} is successfully added", accountDto);
+        log.info("Caching account={}", account.getUsername());
         return accountDto;
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
+            @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
     @Transactional
     public void deleteAccount(String username) {
         accountRepository.deleteByUsername(username);
         log.info("Account with 'username'='{}' is deleted", username);
+        log.info("Delete caching for account={}", username);
+        log.info("Delete caching for accounts");
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
+            @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
     @Transactional
     public void deleteAllAccounts() {
         accountRepository.deleteAll();
         log.info("All Accounts are deleted");
+        log.info("Delete caching for account (all entries)");
+        log.info("Delete caching for accounts");
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
+            @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
     @Transactional
     public void changeAccountPassword(ChangePasswordDto dto) throws NotFoundException {
         var account = accountRepository.findByUsername(dto.getUsername()).orElseThrow(
@@ -123,8 +144,13 @@ public class AccountService {
         account.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         accountRepository.save(account);
         log.info("Password is updated");
+        log.info("Delete caching for account={}", dto.getUsername());
+        log.info("Delete caching for accounts");
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
+            @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
     @Transactional
     public void changeAccountFullName(ChangeFullNameDto dto) throws NotFoundException {
         var account = accountRepository.findByUsername(dto.getUsername()).orElseThrow(
@@ -134,8 +160,13 @@ public class AccountService {
         account.setPatronymic(dto.getPatronymic());
         accountRepository.save(account);
         log.info("Full name is updated");
+        log.info("Delete caching for account={}", dto.getUsername());
+        log.info("Delete caching for accounts");
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
+            @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
     @Transactional
     public void changeAccountUsername(ChangeEmailDto dto)
             throws AlreadyExistException, NotFoundException {
@@ -147,5 +178,7 @@ public class AccountService {
         account.setUsername(dto.getNewEmail());
         accountRepository.save(account);
         log.info("Account username is changed from '{}' to '{}'", dto.getOldEmail(), dto.getNewEmail());
+        log.info("Delete caching for account={}", dto.getOldEmail());
+        log.info("Delete caching for accounts");
     }
 }
