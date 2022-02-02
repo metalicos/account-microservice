@@ -1,5 +1,4 @@
-USE
-`account-micro`;
+USE `account-micro`;
 #
 # ADD DEFAULT PERMISSIONS
 #
