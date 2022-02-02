@@ -1,11 +1,12 @@
-USE `account-micro`;
+USE
+`account-micro`;
 #
 # ADD PERMISSIONS TO ROLES
 #
 START TRANSACTION;
 INSERT INTO `role_has_permission`(role_id, permission_id)
 VALUES
-# OWNER
+    # OWNER
 (1, 1),  -- Read All
 (1, 2),  -- Write All
 (1, 3),  -- Update All
@@ -24,6 +25,10 @@ VALUES
 (2, 22), -- Write Self
 (2, 23), -- Update Self
 (2, 24), -- Delete Self
+(2, 37), -- Read Device Metadata
+(2, 38), -- Write Device Metadata
+(2, 39), -- Update Device Metadata
+(2, 40), -- Delete Device Metadata
 # ADMIN
 (3, 21), -- Read Self
 (3, 22), -- Write Self
